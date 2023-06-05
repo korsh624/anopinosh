@@ -1,19 +1,51 @@
 String data = "";
+
+///setPin13on - включает тестовый пин 13
+///setPin13off - выключает тестовый пин
+///intLight - внутренее освещение 2
+///ExtLight - внешнее освещение 3
+///OpenDoor - открывание двери(ворот)4
+///OpenWindow - открывание окон 5
+///backlight - режим автовключения подсветки 
+///autoLightMotion - режим автовключения света от движения
+///TurnVent - включить вентеляцию  6
+///AlarmSystem - сигнализация 7
 void setup() {
   pinMode(13, OUTPUT);
-  Serial.begin(9600);
-  digitalWrite(2, 0);
-}
+  for (int i = 2; i < 8; i++) {
+    pinMode(i, OUTPUT);
+    digitalWrite(i, 1);
+  }
 
+  Serial.begin(9600);
+  digitalWrite(13, 0);
+}
+void readmessage(int pin, String message, int val) {
+
+  if (data == message) {
+    digitalWrite(pin, val);
+    delay(1000);
+    Serial.println(data);
+  }
+}
 void loop() {
   if (Serial.available()) {
     data = Serial.readString();
-    if (data == "starting") {
-      digitalWrite(13, 1);
-      delay(1000);
-      digitalWrite(13, 0);
-      Serial.println(data);
-    }
   }
-  data="";
+  readmessage(13, "setPin13on", 1);
+  readmessage(13, "setPin13off", 0);
+  readmessage(2, "intLighton", 0);
+  readmessage(2, "intLightoff", 1);
+  readmessage(3, "ExtLighton", 0);
+  readmessage(3, "ExtLighton", 1);
+  readmessage(4, "CloseDoor", 1);
+  readmessage(4, "OpenDoor", 0);
+  readmessage(5, "CloseWindow", 1);
+  readmessage(5, "OpenWindow", 0);
+  readmessage(6, "TurnVenton", 0);
+  readmessage(6, "TurnVentoff", 1);
+  readmessage(7, "AlarmSystemon", 0);
+  readmessage(7, "AlarmSystemoff", 1);
+  
+  data = "";
 }

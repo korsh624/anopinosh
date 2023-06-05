@@ -1,6 +1,5 @@
 import logging
 import time
-
 from aiogram import Bot, Dispatcher, types, executor
 import serial
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup,InlineKeyboardMarkup, InlineKeyboardButton
@@ -38,28 +37,50 @@ async def strart(message: types.Message):
 async def strart(message: types.Message):
     await message.answer('/setPin13on - включает тестовый пин'
                          '\n/setPin13off - выключает тестовый пин'
-                         '\n/intLight - внутренее освещение'
-                         '\n/ExtLight - внешнее освещение '
+                         '\n/intLighton - включает внутренее освещение'
+                         '\n/intLightoff - выключает внутренее освещение'
+                         '\n/ExtLighton - внешнее освещение '
+                         '\n/ExtLightoff - внешнее освещение '
                          '\n/OpenDoor - открывание двери(ворот)'
+                         '\n/CloseDoor - закрывание двери(ворот)'
+                         '\n/CloseWindow - закрывание окон'
                          '\n/OpenWindow - открывание окон'
-                         '\n/backlight - режим автовключения подсветки'
-                         '\n/autoLightMotion - режим автовключения света от движения'
-                         '\n/TurnVent - включить вентеляцию '
-                         '\n/AlarmSystem - сигнализация')
+                         '\n/backlighton - режим автовключения подсветки вкл'
+                         '\n/backlightoff - режим автовключения подсветки выкл'
+                         '\n/autoLightMotionon - режим автовключения света от движения вкл'
+                         '\n/autoLightMotionoff - режим автовключения света от движения выкл'
+                         '\n/TurnVenton - включить вентеляцию '
+                         '\n/TurnVenton - выключить вентеляцию '
+                         '\n/AlarmSystemon - сигнализация вкл'
+                         '\n/AlarmSystemoff - сигнализация выкл')
+
 
 @dp.message_handler(commands='setPin13on')
-async def testpinoff(message: types.Message):
+async def testpinon(message: types.Message):
     answer = sendmessage('setPin13on')
     await message.answer(answer)
     await message.answer('Вы включили тестоый пин')
 
-
-
-
-
-@dp.message_handler(commands='intLight:0')
+@dp.message_handler(commands='setPin13off')
 async def testpinoff(message: types.Message):
+    answer = sendmessage('setPin13off')
+    await message.answer(answer)
+    await message.answer('Вы выключили тестоый пин')
+
+
+
+@dp.message_handler(commands=['ExtLighton'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('ExtLighton')
+    await message.answer(answer)
     await message.answer('Вы включили внешнее освещение')
+
+@dp.message_handler(commands=['ExtLightoff'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('ExtLightoff')
+    await message.answer(answer)
+    await message.answer('Вы выключили внешнее освещение')
+
 
 
 
