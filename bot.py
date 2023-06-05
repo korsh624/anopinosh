@@ -2,12 +2,13 @@ import logging
 import time
 from aiogram import Bot, Dispatcher, types, executor
 import serial
+admins=[]
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup,InlineKeyboardMarkup, InlineKeyboardButton
 logging.basicConfig(level=logging.INFO)
 bot=Bot(token='6162590332:AAFhxYHT_MaRLcZBdvU1hXfELk9zsl2Kc9s')
 dp=Dispatcher(bot)
 try:
-    arduino = serial.Serial('COM3',9600)
+    arduino = serial.Serial('COM4',9600)
 except:
     print('error connected')
 
@@ -19,8 +20,10 @@ keyboard.add(btn)
 def sendmessage(data:str):
     try:
         arduino.write(data.encode())
-        time.sleep(5)
-        return data
+        time.sleep(2)
+        r=arduino.readline()
+        return r.decode()
+
     except:
         return "Controller error"
 
@@ -50,9 +53,10 @@ async def strart(message: types.Message):
                          '\n/autoLightMotionon - режим автовключения света от движения вкл'
                          '\n/autoLightMotionoff - режим автовключения света от движения выкл'
                          '\n/TurnVenton - включить вентеляцию '
-                         '\n/TurnVenton - выключить вентеляцию '
+                         '\n/TurnVentoff - выключить вентеляцию '
                          '\n/AlarmSystemon - сигнализация вкл'
-                         '\n/AlarmSystemoff - сигнализация выкл')
+                         '\n/AlarmSystemoff - сигнализация выкл'
+                         '\n/GetTemp - получить значение температуры ')
 
 
 @dp.message_handler(commands='setPin13on')
@@ -83,6 +87,112 @@ async def testpinoff(message: types.Message):
 
 
 
+@dp.message_handler(commands=['intLighton'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('intLighton')
+    await message.answer(answer)
+    await message.answer('Вы включили внутренее освещение')
+
+@dp.message_handler(commands=['intLightoff'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('intLightoff')
+    await message.answer(answer)
+    await message.answer('Вы выключили внутренее освещение')
+
+@dp.message_handler(commands=['OpenDoor'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('OpenDoor')
+    await message.answer(answer)
+    await message.answer('Вы открыли дверь')
+
+@dp.message_handler(commands=['CloseDoor'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('CloseDoor')
+    await message.answer(answer)
+    await message.answer('Вы закрыли дверь')
+
+
+@dp.message_handler(commands=['CloseWindow'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('CloseWindow')
+    await message.answer(answer)
+    await message.answer('Вы закрыли окно ')
+
+@dp.message_handler(commands=['OpenWindow'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('OpenWindow')
+    await message.answer(answer)
+    await message.answer('Вы открыли окно')
+
+
+@dp.message_handler(commands=['backlighton'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('backlighton')
+    await message.answer(answer)
+    await message.answer('Вы включили режим автовключение подсветки ')
+
+
+@dp.message_handler(commands=['backlightoff'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('backlightoff')
+    await message.answer(answer)
+    await message.answer('Вы выключили режим автовключения подсветки')
+
+@dp.message_handler(commands=['autoLightMotionon'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('autoLightMotionon')
+    await message.answer(answer)
+    await message.answer('Вы включили режим автовключение света от движения ')
+
+@dp.message_handler(commands=['autoLightMotionoff'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('autoLightMotionoff')
+    await message.answer(answer)
+    await message.answer('Вы выключили режим автовключения света от движения')
+
+@dp.message_handler(commands=['TurnVenton'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('TurnVenton')
+    await message.answer(answer)
+    await message.answer('Вы открыли вентеляцию ')
+
+@dp.message_handler(commands=['TurnVentoff'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('TurnVentoff')
+    await message.answer(answer)
+    await message.answer('Вы закрыли вентеляцию')
+
+@dp.message_handler(commands=['AlarmSystemon'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('AlarmSystemon')
+    await message.answer(answer)
+    await message.answer('Вы включили сигнализацию ')
+
+@dp.message_handler(commands=['AlarmSystemoff'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('AlarmSystemoff')
+    await message.answer(answer)
+    await message.answer('Вы выключили сигнализацию')
+
+
+@dp.message_handler(commands=['GetTemp'])
+async def testpinoff(message: types.Message):
+    answer = sendmessage('GetTemp')
+    await message.answer(answer)
+    await message.answer('Вы получили значение температуры')
+
+@dp.message_handler(text="password")
+async def checkadmins(message: types.Message):
+    if message.from_user.id not in admins:
+        admins.append(message.from_user.id )
+        await message.answer('Теперь вы администратор')
+
+
+
+@dp.message_handler()
+async def checkadmins(message: types.Message):
+    if message.from_user.id not in admins:
+        await message.answer('Введите пароль')
 
 
 if __name__ == "__main__":
